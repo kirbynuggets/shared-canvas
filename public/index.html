@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Shared Canvas — draw together, even offline</title>
+<link rel="stylesheet" href="/public/style.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M6 24 C10 10 18 26 26 8' stroke='%23ff6b4a' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+<canvas id="board" aria-label="Shared drawing board"></canvas>
+<div id="cursors" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 24 C10 10 18 26 26 8" /></svg>
+    <div><b>Shared Canvas</b><span id="roomName">room</span></div>
+  </div>
+  <div class="right">
+    <div id="peers" class="peers"></div>
+    <button id="share" class="pill">Invite</button>
+    <button id="status" class="pill status" title="Click to go offline / online"><i></i><span>connecting…</span></button>
+  </div>
+</header>
+
+<div id="empty" class="empty">
+  <h1>Draw anything.</h1>
+  <p>Open this link in another tab or on your phone and draw together. Then go offline, keep drawing, and come back: every stroke merges, nothing is lost.</p>
+</div>
+
+<nav class="tools" aria-label="Tools">
+  <button data-tool="pen" class="tool on" title="Pen (P)"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 6l3 3"/></svg></button>
+  <button data-tool="eraser" class="tool" title="Eraser (E)"><svg viewBox="0 0 24 24"><path d="M8 20h12"/><path d="M5 15l8-8 6 6-6 6H9z"/></svg></button>
+  <span class="sep"></span>
+  <div id="colors" class="colors"></div>
+  <span class="sep"></span>
+  <label class="size" title="Brush size ([ and ])"><input id="size" type="range" min="1" max="40" value="5" /><i id="sizeDot"></i></label>
+  <span class="sep"></span>
+  <button id="undo" class="tool" title="Undo (⌘Z)"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button>
+  <button id="redo" class="tool" title="Redo (⇧⌘Z)"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button>
+  <button id="clear" class="tool" title="Clear board"><svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/></svg></button>
+  <button id="inspect" class="tool" title="How it works (I)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button>
+</nav>
+
+<aside id="panel" class="panel" hidden>
+  <h2>Under the hood</h2>
+  <p class="muted">Every change is an immutable op. Replicas exchange state vectors and send only what the other side lacks, so the board converges in any order.</p>
+  <dl>
+    <dt>You</dt><dd id="pMe">-</dd>
+    <dt>Lamport clock</dt><dd id="pLamport">0</dd>
+    <dt>Ops held</dt><dd id="pOps">0</dd>
+    <dt>Visible strokes</dt><dd id="pStrokes">0</dd>
+    <dt>Round trip</dt><dd id="pRtt">-</dd>
+    <dt>Live op latency</dt><dd id="pLat">-</dd>
+    <dt>Last merge</dt><dd id="pMerge">-</dd>
+  </dl>
+  <h3>State vector</h3>
+  <ol id="pSv" class="sv"></ol>
+</aside>
+
+<div id="toast" class="toast" role="status"></div>
+<script type="module" src="/public/app.js"></script>
+</body>
+</html>

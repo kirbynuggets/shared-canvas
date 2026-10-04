@@ -1,0 +1,24 @@
+{
+  "name": "shared-canvas",
+  "version": "1.0.0",
+  "description": "A local-first multiplayer whiteboard built on a hand-written CRDT. Draw together in real time, keep drawing offline, merge without conflicts.",
+  "type": "module",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test test/",
+    "bench": "node bench/merge.js && node bench/latency.js",
+    "test:e2e": "node e2e/browser.e2e.js",
+    "demo": "node scripts/seed-demo.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^22.15.0"
+  }
+}
